@@ -19,6 +19,8 @@ class BusinessesViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.estimatedRowHeight = 100
+        tableView.rowHeight = UITableViewAutomaticDimension
 
         Business.search(with: "Thai") { (businesses: [Business]?, error: Error?) in
             if let businesses = businesses {
@@ -48,9 +50,15 @@ class BusinessesViewController: UIViewController {
         */
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let navVC = segue.destination as! UINavigationController
+        let filterVC = navVC.topViewController as! FiltersViewController
+        
+        filterVC.delegate = self
+    }
 }
 
-extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate {
+extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if businesses == nil {
             return 0
@@ -65,6 +73,18 @@ extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate {
         cell.business = businesses[indexPath.row]
         
         return cell
+    }
+    
+    func filtersViewController(filterVC: FiltersViewController, didUpdateFilter filter: [String]) {
+        print("I got new filter \(filter)")
+        
+        Business.search(with: "", sort: nil, categories: filter, deals: nil) { (businesses: [Business]?, error: Error?) in
+            if let businesses = businesses {
+                self.businesses = businesses
+
+                self.tableView.reloadData()
+            }
+        }
     }
 }
 
