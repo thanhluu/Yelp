@@ -224,6 +224,7 @@ class FiltersViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        deals = BusinessFilterSettings.sharedInstance.deals ?? false
         distances = yelpDistances()
         sorts = yelpSorts()
     }
@@ -324,7 +325,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
         case TableSection.deals:
             let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
             cell.categoryLabel.text = "Offering a Deal"
-            cell.switchButton.isOn = false
+            cell.switchButton.isOn = BusinessFilterSettings.sharedInstance.deals ?? false
             cell.delegate = self
             return cell
         case TableSection.distance:
