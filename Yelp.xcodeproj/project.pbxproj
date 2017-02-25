@@ -17,6 +17,8 @@
 		B67FE1251E5DC3A6003FC28F /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FE1241E5DC3A6003FC28F /* BusinessCell.swift */; };
 		B67FE1271E5DE4BB003FC28F /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FE1261E5DE4BB003FC28F /* FiltersViewController.swift */; };
 		B67FE12A1E5DE781003FC28F /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FE1291E5DE781003FC28F /* SwitchCell.swift */; };
+		B6AAD9751E608AF9007B64C7 /* SelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AAD9741E608AF9007B64C7 /* SelectCell.swift */; };
+		B6BF81911E6078C000B34F42 /* BusinessFilterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BF81901E6078C000B34F42 /* BusinessFilterSettings.swift */; };
 		F91065DC1B85B789A2434556 /* Pods_Yelp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2893DC5CAF45E9E472DFFCC /* Pods_Yelp.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +38,8 @@
 		B67FE1241E5DC3A6003FC28F /* BusinessCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusinessCell.swift; sourceTree = "<group>"; };
 		B67FE1261E5DE4BB003FC28F /* FiltersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		B67FE1291E5DE781003FC28F /* SwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
+		B6AAD9741E608AF9007B64C7 /* SelectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCell.swift; sourceTree = "<group>"; };
+		B6BF81901E6078C000B34F42 /* BusinessFilterSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusinessFilterSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				A581AE311DB53860006544B2 /* Business.swift */,
+				B6BF81901E6078C000B34F42 /* BusinessFilterSettings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -122,6 +127,7 @@
 			children = (
 				B67FE1241E5DC3A6003FC28F /* BusinessCell.swift */,
 				B67FE1291E5DE781003FC28F /* SwitchCell.swift */,
+				B6AAD9741E608AF9007B64C7 /* SelectCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -142,12 +148,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A5CA689C1DB3E1EA0085DCF9 /* Build configuration list for PBXNativeTarget "Yelp" */;
 			buildPhases = (
-				E40BC5397D5DA54D1F2F7A3F /* 📦 Check Pods Manifest.lock */,
+				E40BC5397D5DA54D1F2F7A3F /* [CP] Check Pods Manifest.lock */,
 				A5CA68861DB3E1EA0085DCF9 /* Sources */,
 				A5CA68871DB3E1EA0085DCF9 /* Frameworks */,
 				A5CA68881DB3E1EA0085DCF9 /* Resources */,
-				227ED432BB1B8CBEE4F07E06 /* 📦 Embed Pods Frameworks */,
-				43C03E7BDCA629E2D8CA3746 /* 📦 Copy Pods Resources */,
+				227ED432BB1B8CBEE4F07E06 /* [CP] Embed Pods Frameworks */,
+				43C03E7BDCA629E2D8CA3746 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -206,14 +212,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		227ED432BB1B8CBEE4F07E06 /* 📦 Embed Pods Frameworks */ = {
+		227ED432BB1B8CBEE4F07E06 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,14 +227,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Yelp/Pods-Yelp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		43C03E7BDCA629E2D8CA3746 /* 📦 Copy Pods Resources */ = {
+		43C03E7BDCA629E2D8CA3746 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,19 +242,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Yelp/Pods-Yelp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E40BC5397D5DA54D1F2F7A3F /* 📦 Check Pods Manifest.lock */ = {
+		E40BC5397D5DA54D1F2F7A3F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -260,8 +266,10 @@
 			files = (
 				B67FE1251E5DC3A6003FC28F /* BusinessCell.swift in Sources */,
 				A581AE361DB5398F006544B2 /* BusinessesViewController.swift in Sources */,
+				B6AAD9751E608AF9007B64C7 /* SelectCell.swift in Sources */,
 				A581AE341DB53945006544B2 /* YelpClient.swift in Sources */,
 				B67FE12A1E5DE781003FC28F /* SwitchCell.swift in Sources */,
+				B6BF81911E6078C000B34F42 /* BusinessFilterSettings.swift in Sources */,
 				A581AE321DB53860006544B2 /* Business.swift in Sources */,
 				B67FE1271E5DE4BB003FC28F /* FiltersViewController.swift in Sources */,
 				A5CA688E1DB3E1EA0085DCF9 /* AppDelegate.swift in Sources */,

@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class BusinessesViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
+    var searchBar = UISearchBar()
     var businesses: [Business]!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,19 +24,17 @@ class BusinessesViewController: UIViewController {
         tableView.dataSource = self
         tableView.estimatedRowHeight = 100
         tableView.rowHeight = UITableViewAutomaticDimension
-
-        Business.search(with: "Thai") { (businesses: [Business]?, error: Error?) in
-            if let businesses = businesses {
-                self.businesses = businesses
-
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-                
-                self.tableView.reloadData()
-            }
-        }
+        
+        searchBar.delegate = self
+        searchBar.placeholder = "Search"
+        searchBar.sizeToFit()
+        
+        navigationItem.titleView = searchBar
+        
+        // Change Color
+        navigationController?.navigationBar.barTintColor = UIColor.red
+        
+        doFilter()
 
         // Example of Yelp search with more search options specified
         /*
@@ -74,17 +75,26 @@ extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate, 
         
         return cell
     }
+
+    func filtersViewControllerDidUpdate(_ filtersViewController: FiltersViewController) {
+        doFilter()
+    }
     
-    func filtersViewController(filterVC: FiltersViewController, didUpdateFilter filter: [String]) {
-        print("I got new filter \(filter)")
+    fileprivate func doFilter() {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         
-        Business.search(with: "", sort: nil, categories: filter, deals: nil) { (businesses: [Business]?, error: Error?) in
+        Business.search(with: searchBar.text!, sort: BusinessFilterSettings.sharedInstance.sort, categories: BusinessFilterSettings.sharedInstance.categories, deals: BusinessFilterSettings.sharedInstance.deals, distance: BusinessFilterSettings.sharedInstance.distance) { (businesses: [Business]?, error: Error?) in
             if let businesses = businesses {
                 self.businesses = businesses
-
                 self.tableView.reloadData()
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
         }
     }
 }
 
+extension BusinessesViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        doFilter()
+    }
+}
