@@ -208,15 +208,14 @@ class FiltersViewController: UIViewController {
     var delegate: FiltersViewControllerDelegate!
     var selectedDeals: Bool = false
     var selectedCategory = [String]()
-    var selectedDistance = Double()
-    
-    var distanceStates = [Int: Bool]()
-    var sortStates = [Int: Bool]()
+
     var categoryStates = [Int: Bool]()
     
-    // Expand variables
-    var distanceExpanded: Bool = false
-    var sortExpanded: Bool = false
+    var distanceOn = false
+    var selectedDistance = maxDistance
+    
+    var sortOn = false
+    var selectedSort = YelpSortMode.bestMatched
     
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
@@ -226,12 +225,17 @@ class FiltersViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        selectedDistance = BusinessFilterSettings.sharedInstance.distance ?? maxDistance
-        selectedDeals = BusinessFilterSettings.sharedInstance.deals ?? false
-        selectedCategory = BusinessFilterSettings.sharedInstance.categories
-        
         distances = yelpDistances()
         sorts = yelpSorts()
+        
+        selectedDistance = BusinessFilterSettings.sharedInstance.distance ?? maxDistance
+        distanceOn = selectedDistance != maxDistance
+        
+        selectedSort = BusinessFilterSettings.sharedInstance.sort ?? YelpSortMode.bestMatched
+        sortOn = selectedSort != YelpSortMode.bestMatched
+        
+        selectedDeals = BusinessFilterSettings.sharedInstance.deals ?? false
+        selectedCategory = BusinessFilterSettings.sharedInstance.categories
     }
 
     override func didReceiveMemoryWarning() {
@@ -249,23 +253,10 @@ class FiltersViewController: UIViewController {
         BusinessFilterSettings.sharedInstance.deals = selectedDeals
         
         // Distance
-        selectedDistance = maxDistance
-        for (row, isSelected) in distanceStates {
-            if isSelected {
-                selectedDistance = distances[row]["meters"] as! Double
-                break
-            }
-        }
-        BusinessFilterSettings.sharedInstance.distance = selectedDistance
+        BusinessFilterSettings.sharedInstance.distance = distanceOn ? selectedDistance : maxDistance
         
         // Sort
-        BusinessFilterSettings.sharedInstance.sort = YelpSortMode.bestMatched
-        for (row, isSelected) in sortStates {
-            if isSelected {
-                BusinessFilterSettings.sharedInstance.sort = sorts[row]["sort"] as! YelpSortMode
-                break
-            }
-        }
+        BusinessFilterSettings.sharedInstance.sort = sortOn ? selectedSort : YelpSortMode.bestMatched
         
         // Categories
         for (row, isSelected) in categoryStates {
@@ -297,28 +288,23 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
         case TableSection.deals:
             return 1
         case TableSection.distance:
-            return distanceExpanded ? distances.count : 1
+            return distanceOn ? distances.count + 1 : 1
         case TableSection.sort:
-            return sortExpanded ? sorts.count : 1
+            return sortOn ? sorts.count + 1 : 1
         default:
             return categories.count
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch TableSection(rawValue: section)! {
-        case TableSection.deals:
-            return 0
-        default:
-            return 45
-        }
+        return 40
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var headerText: String
         switch TableSection(rawValue: section)! {
         case TableSection.deals:
-            headerText = ""
+            headerText = "Deals"
         case TableSection.distance:
             headerText = "Distance"
         case TableSection.sort:
@@ -338,47 +324,41 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
             cell.delegate = self
             return cell
         case TableSection.distance:
-            var currentIndex: Int = 0
-            for (index, element) in distances.enumerated() {
-                if ( selectedDistance == element["meters"] as! Double ) {
-                    currentIndex = index
-                }
-            }
-            
-            if ( !distanceExpanded && 0 == indexPath.row ) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "selectCell") as! SelectCell
-                cell.selectLabel.text = distances[currentIndex]["name"] as! String?
-                for (row, isSelected) in distanceStates {
-                    if isSelected {
-                        cell.selectLabel.text = distances[row]["name"] as? String
-                        break
-                    }
+            if (indexPath as NSIndexPath).row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchCell
+                cell.categoryLabel.text = "Filter by Distance"
+                cell.switchButton.isOn = distanceOn
+                cell.delegate = self
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "selectCell", for: indexPath) as! SelectCell
+                let distance = distances[(indexPath as NSIndexPath).row - 1]
+                cell.selectLabel.text = distance["name"] as! String?
+                if ( distance["meters"] as! Double != selectedDistance ) {
+                    cell.accessoryType = .none
+                } else {
+                    cell.accessoryType = .checkmark
                 }
                 return cell
             }
-            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
-            cell.categoryLabel.text = distances[indexPath.row]["name"] as! String?
-            cell.switchButton.isOn = distanceStates[indexPath.row] ?? false
-            cell.delegate = self
-            return cell
         case TableSection.sort:
-            
-            if ( !sortExpanded && 0 == indexPath.row ) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "selectCell") as! SelectCell
-                cell.selectLabel.text = "Best Matched"
-                for (row, isSelected) in sortStates {
-                    if isSelected {
-                        cell.selectLabel.text = sorts[row]["name"] as! String?
-                        break
-                    }
+            if (indexPath as NSIndexPath).row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchCell
+                cell.categoryLabel.text = "Custom Sort By?"
+                cell.switchButton.isOn = sortOn
+                cell.delegate = self
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "selectCell", for: indexPath) as! SelectCell
+                let sort = sorts[(indexPath as NSIndexPath).row - 1]
+                cell.selectLabel.text = sort["name"] as! String?
+                if ( sort["sort"] as! YelpSortMode != selectedSort ) {
+                    cell.accessoryType = .none
+                } else {
+                    cell.accessoryType = .checkmark
                 }
                 return cell
             }
-            let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
-            cell.categoryLabel.text = sorts[indexPath.row]["name"] as! String?
-            cell.switchButton.isOn = sortStates[indexPath.row] ?? false
-            cell.delegate = self
-            return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
             cell.categoryLabel.text = categories[indexPath.row]["name"]
@@ -401,10 +381,17 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
 
             switch TableSection(rawValue: indexPath.section)! {
             case TableSection.distance:
-                distanceExpanded = true
+                
+                if (indexPath as NSIndexPath).row != 0 {
+                    selectedDistance = distances[(indexPath as NSIndexPath).row - 1]["meters"] as! Double
+                    tableView.reloadSections(IndexSet(integer: 1), with: .none)
+                }
                 tableView.reloadSections(NSIndexSet(index: TableSection.distance.rawValue) as IndexSet, with: .none)
             case TableSection.sort:
-                sortExpanded = true
+                if (indexPath as NSIndexPath).row != 0 {
+                    selectedSort = sorts[(indexPath as NSIndexPath).row - 1]["sort"] as! YelpSortMode
+                    tableView.reloadSections(IndexSet(integer: 1), with: .none)
+                }
                 tableView.reloadSections(NSIndexSet(index: TableSection.sort.rawValue) as IndexSet, with: .none)
             default:
                 break
@@ -419,14 +406,16 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
         case TableSection.deals:
             selectedDeals = value
         case TableSection.distance:
-            distanceStates = [:]
-            distanceStates[ip!.row] = value
-            distanceExpanded = false
+            distanceOn = switchCell.switchButton.isOn
+            if selectedDistance == maxDistance {
+                selectedDistance = distances[0]["meters"] as! Double
+            }
             tableView.reloadSections(NSIndexSet(index: TableSection.distance.rawValue) as IndexSet, with: .none)
         case TableSection.sort:
-            sortStates = [:]
-            sortStates[ip!.row] = value
-            sortExpanded = false
+            sortOn = switchCell.switchButton.isOn
+            if selectedSort == YelpSortMode.bestMatched {
+                selectedSort = sorts[0]["sort"] as! YelpSortMode
+            }
             tableView.reloadSections(NSIndexSet(index: TableSection.sort.rawValue) as IndexSet, with: .none)
         default:
             categoryStates[ip!.row] = value

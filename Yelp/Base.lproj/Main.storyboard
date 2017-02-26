@@ -22,6 +22,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ka9-cp-Tfc">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                            </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="132" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9lj-iW-XrO">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -30,7 +33,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="132"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KWt-Qu-GeQ" id="Hkz-YF-eJC">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="131.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="k5o-k1-inO">
@@ -115,20 +118,40 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ka9-cp-Tfc" secondAttribute="bottom" id="2Jy-k1-Gpj"/>
+                            <constraint firstItem="Ka9-cp-Tfc" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="8VJ-7d-eYB"/>
+                            <constraint firstItem="Ka9-cp-Tfc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Ebq-j9-B4A"/>
                             <constraint firstItem="9lj-iW-XrO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Kwr-2h-nHm"/>
                             <constraint firstItem="9lj-iW-XrO" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="L00-ca-EqS"/>
                             <constraint firstAttribute="trailing" secondItem="9lj-iW-XrO" secondAttribute="trailing" id="Sb8-vX-bqm"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="9lj-iW-XrO" secondAttribute="bottom" id="Wss-XK-T7X"/>
+                            <constraint firstAttribute="trailing" secondItem="Ka9-cp-Tfc" secondAttribute="trailing" id="ZIh-M1-rnI"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="joG-bT-r47">
-                        <barButtonItem key="rightBarButtonItem" title="Filter" id="g1n-lD-DcR">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="XtC-VR-ynW">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="sAQ-NH-Cc1">
+                                <rect key="frame" x="16" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="" image="list"/>
+                                    <segment title="" image="map"/>
+                                </segments>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="switchLayout:" destination="BYZ-38-t0r" eventType="valueChanged" id="9ai-yT-UX8"/>
+                                </connections>
+                            </segmentedControl>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="filter" id="g1n-lD-DcR">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <segue destination="mCP-9Z-U12" kind="show" id="ibM-L3-xgi"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="Ka9-cp-Tfc" id="Iw3-zC-DN8"/>
                         <outlet property="tableView" destination="9lj-iW-XrO" id="ara-gL-Qgx"/>
                     </connections>
                 </viewController>
@@ -156,7 +179,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rzz-Uo-VS5" id="XiW-yi-od9">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="39O-kO-RAD">
@@ -188,16 +211,9 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iCH-Xk-edf" id="P5F-tw-mEL">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow-down" translatesAutoresizingMaskIntoConstraints="NO" id="7ek-yd-hTk">
-                                                    <rect key="frame" x="328" y="5" width="32" height="32"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="32" id="1wx-hJ-AfF"/>
-                                                        <constraint firstAttribute="width" constant="32" id="Hnr-F0-1FN"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D8Y-ug-93h">
                                                     <rect key="frame" x="15" y="11" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -206,10 +222,8 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="7ek-yd-hTk" secondAttribute="trailing" constant="15" id="3M6-cT-dm2"/>
                                                 <constraint firstItem="D8Y-ug-93h" firstAttribute="leading" secondItem="P5F-tw-mEL" secondAttribute="leading" constant="15" id="DV9-5h-QEi"/>
                                                 <constraint firstItem="D8Y-ug-93h" firstAttribute="centerY" secondItem="P5F-tw-mEL" secondAttribute="centerY" id="RYH-z1-acG"/>
-                                                <constraint firstItem="7ek-yd-hTk" firstAttribute="centerY" secondItem="P5F-tw-mEL" secondAttribute="centerY" id="mch-Dm-1jA"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -281,10 +295,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KnV-mu-ETS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1708" y="83.208395802098963"/>
+            <point key="canvasLocation" x="1842" y="81"/>
         </scene>
     </scenes>
     <resources>
-        <image name="arrow-down" width="16" height="16"/>
+        <image name="filter" width="16" height="16"/>
+        <image name="list" width="16" height="16"/>
+        <image name="map" width="16" height="16"/>
     </resources>
 </document>
