@@ -206,7 +206,8 @@ class FiltersViewController: UIViewController {
          ["name" : "Yugoslav", "code": "yugoslav"]]
     
     var delegate: FiltersViewControllerDelegate!
-    var deals: Bool = false
+    var selectedDeals: Bool = false
+    var selectedCategory = [String]()
     
     var distanceStates = [Int: Bool]()
     var sortStates = [Int: Bool]()
@@ -224,7 +225,9 @@ class FiltersViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        deals = BusinessFilterSettings.sharedInstance.deals ?? false
+        selectedDeals = BusinessFilterSettings.sharedInstance.deals ?? false
+        selectedCategory = BusinessFilterSettings.sharedInstance.categories
+        
         distances = yelpDistances()
         sorts = yelpSorts()
     }
@@ -241,7 +244,7 @@ class FiltersViewController: UIViewController {
     
     @IBAction func onSave(_ sender: Any) {
         // Deals
-        BusinessFilterSettings.sharedInstance.deals = deals
+        BusinessFilterSettings.sharedInstance.deals = selectedDeals
         
         // Distance
         BusinessFilterSettings.sharedInstance.distance = maxDistance
@@ -262,14 +265,17 @@ class FiltersViewController: UIViewController {
         }
         
         // Categories
-        var category = [String]()
         for (row, isSelected) in categoryStates {
             if isSelected {
-                category.append(categories[row]["code"]!)
+                selectedCategory.append(categories[row]["code"]!)
+            } else {
+                if let index = selectedCategory.index(of: categories[row]["code"]!) {
+                    selectedCategory.remove(at: index)
+                }
             }
         }
-        if category.count > 0 {
-            BusinessFilterSettings.sharedInstance.categories = category
+        if selectedCategory.count > 0 {
+            BusinessFilterSettings.sharedInstance.categories = selectedCategory
         }
         
         delegate?.filtersViewControllerDidUpdate?(self)
@@ -366,7 +372,13 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
             cell.categoryLabel.text = categories[indexPath.row]["name"]
-            cell.switchButton.isOn = categoryStates[indexPath.row] ?? false
+            //print()
+            if BusinessFilterSettings.sharedInstance.categories.contains(categories[indexPath.row]["code"]!) {
+                cell.switchButton.isOn = true
+            } else {
+                cell.switchButton.isOn = categoryStates[indexPath.row] ?? false
+            }
+            
             cell.delegate = self
             return cell
         }
@@ -396,7 +408,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
         
         switch TableSection(rawValue: ip!.section)! {
         case TableSection.deals:
-            deals = value
+            selectedDeals = value
         case TableSection.distance:
             distanceStates = [:]
             distanceStates[ip!.row] = value
