@@ -208,6 +208,7 @@ class FiltersViewController: UIViewController {
     var delegate: FiltersViewControllerDelegate!
     var selectedDeals: Bool = false
     var selectedCategory = [String]()
+    var selectedDistance = Double()
     
     var distanceStates = [Int: Bool]()
     var sortStates = [Int: Bool]()
@@ -225,6 +226,7 @@ class FiltersViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        selectedDistance = BusinessFilterSettings.sharedInstance.distance ?? maxDistance
         selectedDeals = BusinessFilterSettings.sharedInstance.deals ?? false
         selectedCategory = BusinessFilterSettings.sharedInstance.categories
         
@@ -247,13 +249,14 @@ class FiltersViewController: UIViewController {
         BusinessFilterSettings.sharedInstance.deals = selectedDeals
         
         // Distance
-        BusinessFilterSettings.sharedInstance.distance = maxDistance
+        selectedDistance = maxDistance
         for (row, isSelected) in distanceStates {
             if isSelected {
-                BusinessFilterSettings.sharedInstance.distance = distances[row]["meters"] as! Double
+                selectedDistance = distances[row]["meters"] as! Double
                 break
             }
         }
+        BusinessFilterSettings.sharedInstance.distance = selectedDistance
         
         // Sort
         BusinessFilterSettings.sharedInstance.sort = YelpSortMode.bestMatched
@@ -335,9 +338,16 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
             cell.delegate = self
             return cell
         case TableSection.distance:
+            var currentIndex: Int = 0
+            for (index, element) in distances.enumerated() {
+                if ( selectedDistance == element["meters"] as! Double ) {
+                    currentIndex = index
+                }
+            }
+            
             if ( !distanceExpanded && 0 == indexPath.row ) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "selectCell") as! SelectCell
-                cell.selectLabel.text = "Auto"
+                cell.selectLabel.text = distances[currentIndex]["name"] as! String?
                 for (row, isSelected) in distanceStates {
                     if isSelected {
                         cell.selectLabel.text = distances[row]["name"] as? String
@@ -372,7 +382,6 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Swi
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
             cell.categoryLabel.text = categories[indexPath.row]["name"]
-            //print()
             if BusinessFilterSettings.sharedInstance.categories.contains(categories[indexPath.row]["code"]!) {
                 cell.switchButton.isOn = true
             } else {
